@@ -1,0 +1,12 @@
+# Runtime dependencies for sortvis (Python 3 port — branch: py3-port)
+#
+# Install into a virtualenv with:  pip install -r requirements.txt
+# then install sortvis itself with: pip install .
+
+pycairo>=1.20
+
+# OPTIONAL: only needed for the `-c hilbert` colour source.
+# The PyPI `scurve` is Python 2; use the ported copy that ships alongside
+# this repo instead of `pip install scurve`:
+#
+#   pip install ../scurve-py
