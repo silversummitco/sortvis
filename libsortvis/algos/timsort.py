@@ -1,23 +1,24 @@
-
-class TimBreak(Exception): pass
+class TimBreak(Exception):
+    pass
 
 
 class TimWrapper:
     list = None
     comparisons = 0
     limit = 0
+
     def __init__(self, n):
         self.n = n
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         if TimWrapper.comparisons > TimWrapper.limit:
             raise TimBreak
         TimWrapper.comparisons += 1
-        return cmp(self.n, other.n)
+        return self.n < other.n
 
     def __getattr__(self, attr):
         return getattr(self.n, attr)
-    
+
 
 def timsort(lst):
     lst.wrap(TimWrapper)

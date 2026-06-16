@@ -10,3 +10,7 @@ MANIFEST
 *.swp
 /doc
 /tmp
+# Virtualenv and build/output artifacts (Python 3 port)
+.venv/
+*.egg-info/
+demo*.png

@@ -1,10 +1,12 @@
+import importlib
 import inspect
 
 algorithms = {}
 source = {}
 
+
 def _algo(name):
-    m = __import__(name, globals(), locals(), fromlist=[], level=-1)
+    m = importlib.import_module("." + name, __package__)
     algorithms[name] = getattr(m, name)
     source[name] = inspect.getsource(m)
 
@@ -26,4 +28,3 @@ _algo("shellsort")
 _algo("smoothsort")
 _algo("stoogesort")
 _algo("timsort")
-

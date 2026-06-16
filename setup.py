@@ -1,5 +1,7 @@
+import fnmatch
+import os.path
 from distutils.core import setup
-import fnmatch, os.path
+
 
 def _fnmatch(name, patternList):
     for i in patternList:
@@ -22,16 +24,16 @@ def _splitAll(path):
 
 def findPackages(path, dataExclude=[]):
     """
-        Recursively find all packages and data directories rooted at path. Note
-        that only data _directories_ and their contents are returned -
-        non-Python files at module scope are not, and should be manually
-        included.
-        
-        dataExclude is a list of fnmatch-compatible expressions for files and
-        directories that should not be included in pakcage_data.
+    Recursively find all packages and data directories rooted at path. Note
+    that only data _directories_ and their contents are returned -
+    non-Python files at module scope are not, and should be manually
+    included.
 
-        Returns a (packages, package_data) tuple, ready to be passed to the
-        corresponding distutils.core.setup arguments.
+    dataExclude is a list of fnmatch-compatible expressions for files and
+    directories that should not be included in pakcage_data.
+
+    Returns a (packages, package_data) tuple, ready to be passed to the
+    corresponding distutils.core.setup arguments.
     """
     packages = []
     datadirs = []
@@ -64,24 +66,22 @@ def findPackages(path, dataExclude=[]):
     return packages, package_data
 
 
-
-
-long_description = file("README").read()
+long_description = open("README").read()
 packages, package_data = findPackages("libsortvis")
 version = "0.1"
 setup(
-        name = "sortvis",
-        version = version,
-        description = "Static visualisation of sorting algorithms.",
-        long_description = long_description,
-        author = "Aldo Cortesi",
-        author_email = "aldo@corte.si",
-        url = "http://corte.si/software",
-        packages = packages,
-        package_data = package_data,
-        scripts = ["sortvis"],
-        classifiers = [
-            "Topic :: Scientific/Engineering :: Visualization",
-            "Topic :: Education"
-        ]
+    name="sortvis",
+    version=version,
+    description="Static visualisation of sorting algorithms.",
+    long_description=long_description,
+    author="Aldo Cortesi",
+    author_email="aldo@corte.si",
+    url="http://corte.si/software",
+    packages=packages,
+    package_data=package_data,
+    scripts=["sortvis"],
+    classifiers=[
+        "Topic :: Scientific/Engineering :: Visualization",
+        "Topic :: Education",
+    ],
 )

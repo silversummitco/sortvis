@@ -1,5 +1,6 @@
-import cairo
 import math
+
+import cairo
 
 try:
     import scurve
@@ -9,8 +10,8 @@ except ImportError:
 
 def rgb(x):
     if isinstance(x, tuple) or isinstance(x, list):
-        return (x[0]/255.0, x[1]/255.0, x[2]/255.0)
-    elif isinstance(x, basestring):
+        return (x[0] / 255.0, x[1] / 255.0, x[2] / 255.0)
+    elif isinstance(x, str):
         if len(x) != 6:
             raise ValueError("RGB specifier must be 6 characters long.")
         return rgb([int(i, 16) for i in (x[0:2], x[2:4], x[4:6])])
@@ -19,35 +20,38 @@ def rgb(x):
 
 class ColourGradient:
     """
-        A straight line drawn through the colour cube from a start value to an
-        end value.
+    A straight line drawn through the colour cube from a start value to an
+    end value.
     """
+
     name = "gradient"
+
     def __init__(self, start, end):
         self.start, self.end = start, end
 
     def colour(self, x, l):
-        scale = x/float(l)
+        scale = x / float(l)
         parts = list(self.start)
         for i, v in enumerate(parts):
-            parts[i] = parts[i] + (self.start[i]-self.end[i])*scale*-1
+            parts[i] = parts[i] + (self.start[i] - self.end[i]) * scale * -1
         return tuple(parts)
 
 
 class ColourHilbert:
     """
-        A Hilbert-order traversal of the colour cube. 
+    A Hilbert-order traversal of the colour cube.
     """
+
     def __init__(self):
         self.size = None
         self.curve = None
 
     def findSize(self, n):
         """
-            Return the smallest Hilbert curve size larger than n. 
+        Return the smallest Hilbert curve size larger than n.
         """
         for i in range(100):
-            s = 2**(3*i)
+            s = 2 ** (3 * i)
             if s >= n:
                 return s
         raise ValueError("Number of elements impossibly large.")
@@ -58,12 +62,13 @@ class ColourHilbert:
         d = float(self.curve.dimensions()[0])
         # Scale X to sample evenly from the curve, if the list length isn't
         # an exact match for the Hilbert curve size.
-        x = x*int(len(self.curve)/float(n))
-        return tuple([i/d for i in self.curve.point(x)])
-                
-    
+        x = x * int(len(self.curve) / float(n))
+        return tuple([i / d for i in self.curve.point(x)])
+
+
 class NiceCtx(cairo.Context):
-    defaultBorderColour = rgb((0x7d, 0x7d, 0x7d))
+    defaultBorderColour = rgb((0x7D, 0x7D, 0x7D))
+
     def stroke_border(self, border):
         src = self.get_source()
         width = self.get_line_width()
@@ -94,42 +99,43 @@ class Canvas:
 
     def save(self, fname, rotate):
         """
-            Save the image to a file. If rotate is true, rotate by 90 degrees.
+        Save the image to a file. If rotate is true, rotate by 90 degrees.
         """
         if rotate:
             surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.height, self.width)
             ctx = cairo.Context(surf)
-            ctx.translate(self.height*0.5, self.width*0.5)
-            ctx.rotate(math.pi/2)
-            ctx.translate(-self.width*0.5, -self.height*0.5)
+            ctx.translate(self.height * 0.5, self.width * 0.5)
+            ctx.rotate(math.pi / 2)
+            ctx.translate(-self.width * 0.5, -self.height * 0.5)
             ctx.set_source_surface(self.surface)
             ctx.paint()
         else:
             surf = self.surface
         surf.write_to_png(fname)
-            
+
 
 class _PathDrawer:
     TITLEGAP = 5
+
     def __init__(self, csource):
         """
-            csource: A colour source
+        csource: A colour source
         """
         self.csource = csource
 
     def lineCoords(self, positions, length, edge=0.02):
         """
-            Returns a list of proportional (x, y) co-ordinates for a given list
-            of Y-offsets. Each co-ordinate value is a floating point number
-            between 0 and 1, inclusive.
+        Returns a list of proportional (x, y) co-ordinates for a given list
+        of Y-offsets. Each co-ordinate value is a floating point number
+        between 0 and 1, inclusive.
         """
-        xscale = (1.0-(2*edge))/(len(positions)-1)
-        yscale = 1.0/length
+        xscale = (1.0 - (2 * edge)) / (len(positions) - 1)
+        yscale = 1.0 / length
         coords = []
-        coords.append((0, positions[0]*yscale))
+        coords.append((0, positions[0] * yscale))
         for i, v in enumerate(positions):
-            coords.append(((xscale * i) + edge, v*yscale))
-        coords.append((1, v*yscale))
+            coords.append(((xscale * i) + edge, v * yscale))
+        coords.append((1, v * yscale))
         return coords
 
     def drawPaths(self, canvas, linewidth, borderwidth, width, height, lst):
@@ -171,8 +177,18 @@ class _PathDrawer:
 
 
 class Weave(_PathDrawer):
-    def __init__(self, csource, width, height, titleHeight, titleColour, background,
-                       rotate, linewidth, borderwidth):
+    def __init__(
+        self,
+        csource,
+        width,
+        height,
+        titleHeight,
+        titleColour,
+        background,
+        rotate,
+        linewidth,
+        borderwidth,
+    ):
         _PathDrawer.__init__(self, csource)
         self.width, self.height, self.titleHeight = width, height, titleHeight
         self.titleColour = titleColour
@@ -180,7 +196,7 @@ class Weave(_PathDrawer):
         self.rotate, self.linewidth, self.borderwidth = rotate, linewidth, borderwidth
 
     def getColor(self, x, n):
-        v = 1 - (float(x)/n*0.7)
+        v = 1 - (float(x) / n * 0.7)
         return (v, v, v)
 
     def draw(self, lst, title, fname):
@@ -193,19 +209,21 @@ class Weave(_PathDrawer):
                 self.linewidth,
                 self.borderwidth,
                 self.width,
-                self.height-self.titleHeight,
-                lst
+                self.height - self.titleHeight,
+                lst,
             )
         else:
-            self.drawPaths(c, self.linewidth, self.borderwidth, self.width, self.height, lst)
+            self.drawPaths(
+                c, self.linewidth, self.borderwidth, self.width, self.height, lst
+            )
         if title:
             self.drawTitle(
                 c,
                 title,
                 5,
-                self.height-self.TITLEGAP,
-                self.titleHeight-self.TITLEGAP,
-                self.titleColour
+                self.height - self.TITLEGAP,
+                self.titleHeight - self.TITLEGAP,
+                self.titleColour,
             )
         c.save(fname, self.rotate)
 
@@ -230,10 +248,8 @@ class Dense(_PathDrawer):
                 c,
                 title,
                 5,
-                height+self.titleHeight-self.TITLEGAP,
-                self.titleHeight-self.TITLEGAP,
-                self.titleColour
+                height + self.titleHeight - self.TITLEGAP,
+                self.titleHeight - self.TITLEGAP,
+                self.titleColour,
             )
         c.save(fname, False)
-
-
