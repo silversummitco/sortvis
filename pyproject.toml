@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sortvis"
+version = "0.1"
+description = "Static visualisation of sorting algorithms."
+readme = { file = "README", content-type = "text/plain" }
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Aldo Cortesi", email = "aldo@corte.si" }]
+keywords = ["sorting", "visualisation", "algorithms", "cairo"]
+dependencies = ["pycairo>=1.20"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Education",
+]
+
+# NOTE: the `-c hilbert` colour source also needs `scurve`. The PyPI `scurve`
+# is Python 2 only, so it is NOT listed here; install the ported copy from
+# source instead:  pip install ../scurve-py
+
+[project.urls]
+Homepage = "https://sortvis.org"
+Source = "https://github.com/cortesi/sortvis"
+
+[tool.setuptools]
+packages = ["libsortvis", "libsortvis.algos"]
+script-files = ["sortvis"]
