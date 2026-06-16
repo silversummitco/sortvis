@@ -135,7 +135,9 @@ class _PathDrawer:
         coords.append((0, positions[0] * yscale))
         for i, v in enumerate(positions):
             coords.append(((xscale * i) + edge, v * yscale))
-        coords.append((1, v * yscale))
+        # positions is non-empty (positions[0] is used above), so positions[-1]
+        # is the same final value as the loop's last `v`.
+        coords.append((1, positions[-1] * yscale))
         return coords
 
     def drawPaths(self, canvas, linewidth, borderwidth, width, height, lst):

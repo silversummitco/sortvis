@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-import math
 import random
-import sys
 from optparse import OptionGroup, OptionParser
 
 from libsortvis import algos, graph, sortable
@@ -222,9 +220,11 @@ def main():
         parser.error("Unknown visualisation: %s" % args[0])
 
     if options.readfile_sorthist:
+        # No algorithm name exists in sort-history mode, so there is no title
+        # text to draw here (the previous code referenced an unbound `i`).
         ldrawer.draw(
             lst,
-            i if options.title else None,
+            None,
             options.ofname,
         )
     else:
